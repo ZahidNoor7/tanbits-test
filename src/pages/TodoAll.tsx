@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import TodoModal from "../components/Modals/TodoModal";
 import Filters from "../components/Filters/Filters";
 import TodoCard from "../components/Cards/TodoCard";
+import TodoModal from "../components/Modals/TodoModal";
 
 interface Todo {
   id: number;
@@ -109,17 +109,8 @@ export default function TodoAll() {
 
         <main className="Todos col-span-full lg:col-span-9 xl:col-span-10 p-4 overflow-auto">
           <div className="h-full">
-            {Todos.length > 0 ? (
-              Todos.filter((todo) => {
-                if (SelectedTags.length === 0) {
-                  return !HideDoneTasks || !todo.completed;
-                } else {
-                  return (
-                    SelectedTags.some((tag) => todo.tags.includes(tag)) &&
-                    (!HideDoneTasks || !todo.completed)
-                  );
-                }
-              }).length > 0 ? (
+            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+              {Todos.length > 0 ? (
                 Todos.filter((todo) => {
                   if (SelectedTags.length === 0) {
                     return !HideDoneTasks || !todo.completed;
@@ -129,8 +120,17 @@ export default function TodoAll() {
                       (!HideDoneTasks || !todo.completed)
                     );
                   }
-                }).map((todo: Todo) => (
-                  <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                }).length > 0 ? (
+                  Todos.filter((todo) => {
+                    if (SelectedTags.length === 0) {
+                      return !HideDoneTasks || !todo.completed;
+                    } else {
+                      return (
+                        SelectedTags.some((tag) => todo.tags.includes(tag)) &&
+                        (!HideDoneTasks || !todo.completed)
+                      );
+                    }
+                  }).map((todo: Todo) => (
                     <TodoCard
                       key={todo.id}
                       TaskDetails={todo}
@@ -138,14 +138,14 @@ export default function TodoAll() {
                       deleteTodo={deleteTodo}
                       editTodo={editTodo}
                     />
-                  </div>
-                ))
+                  ))
+                ) : (
+                  <div>No Tasks!</div>
+                )
               ) : (
                 <div>No Tasks!</div>
-              )
-            ) : (
-              <div>No Tasks!</div>
-            )}
+              )}
+            </div>
           </div>
         </main>
       </div>
