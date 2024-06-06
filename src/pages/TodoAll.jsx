@@ -1,32 +1,19 @@
-import React, { useState, useEffect } from "react";
-import TodoModal from "../components/Modals/TodoModal";
+import { useState, useEffect } from "react";
 import Filters from "../components/Filters/Filters";
 import TodoCard from "../components/Cards/TodoCard";
-
-interface Todo {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-  completed: boolean;
-}
-
-interface Option {
-  color: string;
-  title: string;
-}
+import TodoModal from "../components/Modals/TodoModal";
 
 export default function TodoAll() {
-  const [Todos, setTodos] = useState<Todo[]>(() => {
+  const [Todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem("TodosList");
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
 
-  const [SelectedTags, setSelectedTags] = useState<string[]>([]);
-  const [HideDoneTasks, setHideDoneTasks] = useState<boolean>(false);
-  const [EditTodo, setEditTodo] = useState<Todo | null>(null);
+  const [SelectedTags, setSelectedTags] = useState([]);
+  const [HideDoneTasks, setHideDoneTasks] = useState(false);
+  const [EditTodo, setEditTodo] = useState(null);
 
-  const options: Option[] = [
+  const options = [
     {
       color: "#D2CEFF",
       title: "Work",
@@ -45,10 +32,7 @@ export default function TodoAll() {
     },
   ];
 
-  const toggleTag = (
-    tag: string,
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const toggleTag = (tag, event) => {
     event.preventDefault();
     setSelectedTags((prevTags) =>
       prevTags.includes(tag)
@@ -57,7 +41,7 @@ export default function TodoAll() {
     );
   };
 
-  const toggleTodoStatus = (id: number) => {
+  const toggleTodoStatus = (id) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -65,14 +49,14 @@ export default function TodoAll() {
     );
   };
 
-  const editTodo = (id: number) => {
+  const editTodo = (id) => {
     const todoToEdit = Todos.find((todo) => todo.id === id);
     if (todoToEdit) {
       setEditTodo(todoToEdit);
     }
   };
 
-  const deleteTodo = (id: number) => {
+  const deleteTodo = (id) => {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
@@ -109,17 +93,8 @@ export default function TodoAll() {
 
         <main className="Todos col-span-full lg:col-span-9 xl:col-span-10 p-4 overflow-auto">
           <div className="h-full">
-            {Todos.length > 0 ? (
-              Todos.filter((todo) => {
-                if (SelectedTags.length === 0) {
-                  return !HideDoneTasks || !todo.completed;
-                } else {
-                  return (
-                    SelectedTags.some((tag) => todo.tags.includes(tag)) &&
-                    (!HideDoneTasks || !todo.completed)
-                  );
-                }
-              }).length > 0 ? (
+            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+              {Todos.length > 0 ? (
                 Todos.filter((todo) => {
                   if (SelectedTags.length === 0) {
                     return !HideDoneTasks || !todo.completed;
@@ -129,23 +104,32 @@ export default function TodoAll() {
                       (!HideDoneTasks || !todo.completed)
                     );
                   }
-                }).map((todo: Todo) => (
-                  <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                }).length > 0 ? (
+                  Todos.filter((todo) => {
+                    if (SelectedTags.length === 0) {
+                      return !HideDoneTasks || !todo.completed;
+                    } else {
+                      return (
+                        SelectedTags.some((tag) => todo.tags.includes(tag)) &&
+                        (!HideDoneTasks || !todo.completed)
+                      );
+                    }
+                  }).map((todo, index) => (
                     <TodoCard
-                      key={todo.id}
+                      key={index}
                       TaskDetails={todo}
                       toggleTodoStatus={toggleTodoStatus}
                       deleteTodo={deleteTodo}
                       editTodo={editTodo}
                     />
-                  </div>
-                ))
+                  ))
+                ) : (
+                  <div>No Tasks!</div>
+                )
               ) : (
                 <div>No Tasks!</div>
-              )
-            ) : (
-              <div>No Tasks!</div>
-            )}
+              )}
+            </div>
           </div>
         </main>
       </div>

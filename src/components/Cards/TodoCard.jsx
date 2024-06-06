@@ -1,29 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { BsThreeDots } from "react-icons/bs";
 
-interface TaskDetails {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-  completed: boolean;
-}
-
-interface TodoCardProps {
-  TaskDetails: TaskDetails;
-  toggleTodoStatus: (id: number) => void;
-  deleteTodo: (id: number) => void;
-  editTodo: (id: number) => void;
-}
-
-const TodoCard: React.FC<TodoCardProps> = ({
-  TaskDetails,
-  toggleTodoStatus,
-  deleteTodo,
-  editTodo,
-}) => {
+const TodoCard = ({ TaskDetails, toggleTodoStatus, deleteTodo, editTodo }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -37,11 +17,8 @@ const TodoCard: React.FC<TodoCardProps> = ({
     deleteTodo(TaskDetails.id);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
   };
@@ -63,7 +40,9 @@ const TodoCard: React.FC<TodoCardProps> = ({
       <div className="flex flex-col gap-4">
         <div className="CardHeader flex items-center justify-between">
           <div
-            className={`text-2xl ${TaskDetails.completed && "line-through"}`}
+            className={`text-2xl ${
+              TaskDetails.completed ? "line-through" : ""
+            }`}
           >
             {TaskDetails.title}
           </div>
@@ -101,14 +80,17 @@ const TodoCard: React.FC<TodoCardProps> = ({
           </div>
         </div>
 
-        <div className={`CardBody ${TaskDetails.completed && "line-through"}`}>
+        <div
+          className={`CardBody ${TaskDetails.completed ? "line-through" : ""}`}
+        >
           {TaskDetails.description}
         </div>
 
         <div className="CardFooter flex items-center justify-between">
           <div className="flex space-x-2">
-            {TaskDetails.tags.map((option) => (
+            {TaskDetails.tags.map((option, index) => (
               <div
+                key={index}
                 className="rounded-full w-8 h-8"
                 style={{
                   backgroundColor:

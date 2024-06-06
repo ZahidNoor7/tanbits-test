@@ -8,7 +8,7 @@ import {
 import TodoAll from "./pages/TodoAll";
 import GetStarted from "./pages/GetStarted";
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <Router>
       <Routes>

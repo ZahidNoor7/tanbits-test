@@ -1,29 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
-interface Todo {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-  completed: boolean;
-}
-
-interface Option {
-  color: string;
-  title: string;
-}
-
-interface TodoModalProps {
-  Todos: Todo[];
-  EditTodo?: Todo | null;
-  setEditTodo?: React.Dispatch<React.SetStateAction<Todo | null>>;
-  toggleTag: (tag: string, event: React.MouseEvent<HTMLButtonElement>) => void;
-  SelectedTags: string[];
-  setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
-  setTodos?: React.Dispatch<React.SetStateAction<Todo[]>>;
-}
-
-const TodoModal: React.FC<TodoModalProps> = ({
+const TodoModal = ({
   Todos,
   EditTodo,
   setEditTodo,
@@ -59,9 +36,9 @@ const TodoModal: React.FC<TodoModalProps> = ({
     };
   }, [EditTodo]);
 
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef(null);
 
-  const options: Option[] = [
+  const options = [
     {
       color: "#D2CEFF",
       title: "Work",
@@ -91,13 +68,13 @@ const TodoModal: React.FC<TodoModalProps> = ({
     }
   }, [setEditTodo]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     const newTitle = formData.title;
     const newDescription = formData.description;
 
-    const newTodo: Todo = {
+    const newTodo = {
       id: new Date().getTime(),
       title: newTitle,
       description: newDescription,
@@ -130,18 +107,11 @@ const TodoModal: React.FC<TodoModalProps> = ({
   };
 
   const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        const tagButtons = Array.from(
-          document.querySelectorAll(".tag-button")
-        ) as HTMLElement[];
+    (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        const tagButtons = Array.from(document.querySelectorAll(".tag-button"));
 
-        if (
-          tagButtons.some((button) => button.contains(event.target as Node))
-        ) {
+        if (tagButtons.some((button) => button.contains(event.target))) {
           return;
         }
 

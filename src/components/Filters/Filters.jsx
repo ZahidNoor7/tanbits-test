@@ -1,28 +1,11 @@
-import React from "react";
-
-interface Option {
-  color: string;
-  title: string;
-}
-
-interface FiltersProps {
-  options: Option[];
-  HideDoneTasks: boolean;
-  setHideDoneTasks: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleTag: (tag: string, event: React.MouseEvent<HTMLButtonElement>) => void;
-  SelectedTags: string[];
-  setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-const Filters: React.FC<FiltersProps> = ({
+const Filters = ({
   options,
   HideDoneTasks,
   setHideDoneTasks,
   toggleTag,
   SelectedTags,
-  setSelectedTags,
 }) => {
-  const changeTaskStatus = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const changeTaskStatus = (event) => {
     const isChecked = event.target.checked;
     setHideDoneTasks(isChecked);
   };
@@ -36,7 +19,7 @@ const Filters: React.FC<FiltersProps> = ({
             key={option.title}
             onClick={(event) => toggleTag(option.title, event)}
             className={`flex items-center gap-4 w-full p-2 rounded-lg hover:bg-[#FAF9F8] ${
-              SelectedTags.includes(option.title) && "bg-[#FAF9F8]"
+              SelectedTags.includes(option.title) ? "bg-[#FAF9F8]" : ""
             }`}
           >
             <div
